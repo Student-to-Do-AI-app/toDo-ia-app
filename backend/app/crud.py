@@ -1,62 +1,50 @@
-from fastapi import APIRouter, HTTPException
 from sqlmodel import Session, select
-from app.database import engine
+from typing import Optional, List
 from app.models import Task
-from app.schemas import TaskCreate, TaskRead, TaskUpdate
-
-router = APIRouter()
+from app.schemas import TaskCreate, TaskUpdate
 
 
-# ✅ Crear una nueva tarea
-@router.post("/tasks", response_model=TaskRead)
-def create_task(task_data: TaskCreate):
-    task = Task(title=task_data.title, description=task_data.description)
-    with Session(engine) as session:
-        session.add(task)
-        session.commit()
-        session.refresh(task)
-        return task
+def create_task(db: Session, task_data: TaskCreate) -> Task:
+    task = Task(
+        title=task_data.title,
+        description=task_data.description,
+        user_id=task_data.user_id,
+    )
+    db.add(task)
+    db.commit()
+    db.refresh(task)
+    return task
 
 
-# ✅ Obtener todas las tareas
-@router.get("/tasks", response_model=list[TaskRead])
-def get_tasks(user_id: Optional[int] = Query(default=None)):
-    with Session(engine) as session:
-        query = select(Task)
-        if user_id is not None:
-            query = query.where(Task.user_id == user_id)
-        tasks = session.exec(query).all()
-        return tasks
+def get_tasks(db: Session, user_id: Optional[int] = None) -> List[Task]:
+    query = select(Task)
+    if user_id is not None:
+        query = query.where(Task.user_id == user_id)
+    return db.exec(query).all()
 
 
-@router.patch("/tasks/{task_id}", response_model=TaskRead)
-def patch_task(task_id: int, task_data: TaskUpdate):
-    with Session(engine) as session:
-        task = session.get(Task, task_id)
-        if not task:
-            raise HTTPException(status_code=404, detail="Tarea no encontrada")
+def update_task(db: Session, task_id: int, task_data: TaskUpdate) -> Optional[Task]:
+    task = db.get(Task, task_id)
+    if not task:
+        return None
 
-        # Solo actualiza si el campo fue enviado
-        if task_data.title is not None:
-            task.title = task_data.title
-        if task_data.description is not None:
-            task.description = task_data.description
-        if task_data.completed is not None:
-            task.completed = task_data.completed
+    if task_data.title is not None:
+        task.title = task_data.title
+    if task_data.description is not None:
+        task.description = task_data.description
+    if task_data.completed is not None:
+        task.completed = task_data.completed
 
-        session.add(task)
-        session.commit()
-        session.refresh(task)
-        return task
+    db.add(task)
+    db.commit()
+    db.refresh(task)
+    return task
 
 
-@router.delete("/tasks/{task_id}")
-def delete_task(task_id: int):
-    with Session(engine) as session:
-        task = session.get(Task, task_id)
-        if not task:
-            raise HTTPException(status_code=404, detail="Tarea no encontrada")
-
-        session.delete(task)
-        session.commit()
-        return {"detail": "Tarea eliminada correctamente"}
+def delete_task(db: Session, task_id: int) -> bool:
+    task = db.get(Task, task_id)
+    if not task:
+        return False
+    db.delete(task)
+    db.commit()
+    return True
