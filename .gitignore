@@ -1,9 +1,11 @@
-# Carpetas virtualenv
-backend/venv/
-frontend/node_modules/
-.venv/
+# ==== BACKEND ====
 
-# Caché y compilados
+# Entornos virtuales
+backend/venv/
+.venv/
+.pyenv/
+
+# Compilados y caché de Python
 __pycache__/
 *.py[cod]
 *.log
@@ -12,15 +14,42 @@ __pycache__/
 .DS_Store
 Thumbs.db
 .vscode/
+.idea/
+
+# Archivos de configuración locales
+.env
+*.env
+.python-version
 
 # Bases de datos locales
 *.sqlite3
 *.db
 
-# Variables de entorno
-.env
-*.env
+# ==== FRONTEND ====
 
-# pyenv
-.python-version
-.pyenv/
+# Dependencias y builds
+frontend/node_modules/
+frontend/package-lock.json*
+frontend/dist/
+frontend/dist-ssr/
+
+# Archivos temporales y locales
+*.local
+*.log
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+frontend/pnpm-debug.log*
+frontend/lerna-debug.log*
+
+# Configuraciones del editor
+frontend/.vscode/
+frontend/.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Archivos del sistema
+frontend/.DS_Store
