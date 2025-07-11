@@ -1,26 +1,29 @@
 import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { CreateTask } from "../actions/tasks.actions";
-import type { AppDispatch } from "../reducers/store";
+import type { TaskCreatePayload } from "../models/tasks.model";
 
-export default function TaskForm() {
-  const dispatch = useDispatch<AppDispatch>();
+interface TaskFormProps {
+  onSubmit: (data: TaskCreatePayload, id?: number) => void;
+}
 
+export default function TaskForm({ onSubmit }: TaskFormProps) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [id, setID] = useState<number>();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (title.trim()) {
-      dispatch(CreateTask({ title, description }));
+      // Si hay id, lo pasamos; si no, undefined
+      onSubmit({ title, description }, id);
       setTitle("");
       setDescription("");
+      setID(undefined);
     }
   };
 
   return (
     <form onSubmit={handleSubmit} className="task-form">
-      <h2>➕ Nueva tarea</h2>
+      <h2>➕ Crear o actualizar tarea</h2>
       <input
         type="text"
         placeholder="Título"
@@ -33,7 +36,13 @@ export default function TaskForm() {
         value={description}
         onChange={(e) => setDescription(e.target.value)}
       />
-      <button type="submit">Agregar tarea</button>
+      <input
+        type="number"
+        placeholder="ID de tarea para actualizar (opcional)"
+        value={id ?? ""}
+        onChange={(e) => setID(parseInt(e.target.value))}
+      />
+      <button type="submit">Guardar tarea</button>
     </form>
   );
 }
