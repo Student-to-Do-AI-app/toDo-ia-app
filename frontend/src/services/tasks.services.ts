@@ -26,3 +26,7 @@ export const updateTask = async (
   const response = await axios.patch(`${API_URL}/tasks/${id}`, data);
   return response.data;
 };
+
+export const deleteTask = async (id: number): Promise<void> => {
+  await axios.delete(`${API_URL}/tasks/${id}`);
+};

@@ -36,3 +36,12 @@ export const UpdateTaskSuccess = createAction<Task>(
 export const UpdateTaskFailure = createAction<string>(
   "[Tasks] update task failure"
 );
+
+// 🗑️ Delete task
+export const DeleteTask = createAction<number>("[Tasks] delete task");
+export const DeleteTaskSuccess = createAction<number>(
+  "[Tasks] delete task success"
+);
+export const DeleteTaskFailure = createAction<string>(
+  "[Tasks] delete task failure"
+);

@@ -1,5 +1,10 @@
 import { call, put, takeLatest, all } from "redux-saga/effects";
-import { getTasks, createTask } from "../services/tasks.services"; // ✅ importa createTask del servicio
+import {
+  getTasks,
+  createTask,
+  updateTask,
+  deleteTask,
+} from "../services/tasks.services"; // ✅ importa createTask del servicio
 import {
   FetchTasks,
   FetchTasksSuccess,
@@ -7,8 +12,17 @@ import {
   CreateTask,
   CreateTaskSuccess,
   CreateTaskFailure,
+  UpdateTaskSuccess,
+  UpdateTaskFailure,
+  UpdateTask,
+  DeleteTaskFailure,
+  DeleteTask,
 } from "../actions/tasks.actions";
-import type { Task, TaskCreatePayload } from "../models/tasks.model";
+import type {
+  Task,
+  TaskCreatePayload,
+  TaskUpdatePayload,
+} from "../models/tasks.model";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
 // 📦 GET tasks
@@ -41,10 +55,45 @@ function* handleCreateTask(action: PayloadAction<TaskCreatePayload>) {
   }
 }
 
+function* handleUpdateTask(
+  action: PayloadAction<{ id: number; data: TaskUpdatePayload }>
+) {
+  try {
+    const response: Task = yield call(
+      updateTask,
+      action.payload.id,
+      action.payload.data
+    );
+    yield put(UpdateTaskSuccess(response));
+    yield put(FetchTasks()); // refresca la lista
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      yield put(UpdateTaskFailure(error.message));
+    } else {
+      yield put(UpdateTaskFailure("Ocurrió un error desconocido"));
+    }
+  }
+}
+
+function* handleDeleteTask(action: PayloadAction<number>) {
+  try {
+    yield call(deleteTask, action.payload);
+    yield put(FetchTasks()); // refresca lista
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      yield put(DeleteTaskFailure(error.message));
+    } else {
+      yield put(DeleteTaskFailure("Ocurrió un error desconocido"));
+    }
+  }
+}
+
 // 👀 watcher
 export default function* tasksSaga() {
   yield all([
     takeLatest(FetchTasks.type, handleFetchTasks),
     takeLatest(CreateTask.type, handleCreateTask),
+    takeLatest(UpdateTask.type, handleUpdateTask),
+    takeLatest(DeleteTask.type, handleDeleteTask),
   ]);
 }

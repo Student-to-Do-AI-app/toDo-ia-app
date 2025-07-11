@@ -1,8 +1,8 @@
 // src/pages/TasksPage.tsx
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { FetchTasks } from "../actions/tasks.actions";
-import "../pages/TaskPage.css"; // para estilos rápidos
+import { DeleteTask, FetchTasks, UpdateTask } from "../actions/tasks.actions";
+import "../pages/taskPage.css"; // para estilos rápidos
 import type { AppDispatch, RootState } from "../reducers/store";
 import TaskForm from "./TaskForm";
 
@@ -34,6 +34,26 @@ export default function TasksPage() {
                 {task.completed ? "Completada" : "Pendiente"}
               </strong>
             </p>
+            <button
+              onClick={() =>
+                dispatch(
+                  UpdateTask({
+                    id: task.id,
+                    data: { completed: !task.completed },
+                  })
+                )
+              }
+            >
+              {task.completed
+                ? "Marcar como pendiente"
+                : "Marcar como completada"}
+            </button>
+            <button
+              style={{ backgroundColor: "crimson", marginLeft: "0.5rem" }}
+              onClick={() => dispatch(DeleteTask(task.id))}
+            >
+              Eliminar
+            </button>
           </div>
         ))}
       </div>
