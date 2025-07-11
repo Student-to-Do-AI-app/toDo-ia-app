@@ -23,3 +23,8 @@ app.include_router(router)
 @app.on_event("startup")
 def on_startup():
     create_db_and_tables()
+
+
+@app.get("/ping")
+def ping():
+    return {"message": "pong"}
