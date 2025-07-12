@@ -8,6 +8,7 @@ class TaskCreate(BaseModel):
     title: str
     description: Optional[str] = None
     user_id: Optional[int] = None
+    time_spent: Optional[int] = 0
 
 
 # Esquema para actualizar una tarea (parcial o total)
@@ -16,6 +17,7 @@ class TaskUpdate(BaseModel):
     description: Optional[str] = None
     completed: Optional[bool] = None
     user_id: Optional[int] = None
+    time_spent: Optional[int] = None
 
 
 # Esquema para devolver una tarea (incluye ID y fecha)
@@ -26,6 +28,7 @@ class TaskRead(BaseModel):
     completed: bool
     created_at: datetime
     user_id: Optional[int]
+    time_spent: Optional[int] = None
 
     class Config:
         orm_mode = True

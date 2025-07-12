@@ -34,6 +34,8 @@ def update_task(db: Session, task_id: int, task_data: TaskUpdate) -> Optional[Ta
         task.description = task_data.description
     if task_data.completed is not None:
         task.completed = task_data.completed
+    if task_data.time_spent is not None:
+        task.time_spent = task_data.time_spent
 
     db.add(task)
     db.commit()

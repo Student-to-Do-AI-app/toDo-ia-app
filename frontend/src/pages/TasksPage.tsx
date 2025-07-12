@@ -46,37 +46,37 @@ export default function TasksPage() {
     <div className="tasks-container">
       <TaskForm onSubmit={handleSubmit} />
 
-      {loading && <p>Cargando tareas...</p>}
+      {loading && <p>Loading tasks...</p>}
       {error && <p style={{ color: "red" }}>Error: {error}</p>}
 
-      <h1>📋 Lista de tareas</h1>
-      {tasks.length === 0 && !loading && <p>No hay tareas aún.</p>}
+      <h1>📋 Tasks list</h1>
+      {tasks.length === 0 && !loading && <p>No tasks.</p>}
 
       <div className="tasks-grid">
         {tasks.map((task) => (
           <div className="task-card" key={task.id}>
             <strong>ID: {task.id}</strong>
+
             <h3>{task.title}</h3>
             {task.description && <p>{task.description}</p>}
             <p>
-              Estado:{" "}
+              State:{" "}
               <strong style={{ color: task.completed ? "green" : "gray" }}>
-                {task.completed ? "Completada" : "Pendiente"}
+                {task.completed ? "Complete" : "To do"}
               </strong>
+              <strong>Time spent: {task.time_spent}</strong>
             </p>
 
             <div className="task-buttons">
               <button onClick={() => toggleComplete(task)}>
-                {task.completed
-                  ? "Marcar como pendiente"
-                  : "Marcar como completada"}
+                {task.completed ? "Mark as incomplete" : "Mark as complete"}
               </button>
 
               <button
                 className="delete-btn"
                 onClick={() => removeTask(task.id)}
               >
-                Eliminar
+                Delete
               </button>
             </div>
           </div>

@@ -4,6 +4,7 @@ export interface Task {
   description?: string;
   completed: boolean;
   user_id?: number;
+  time_spent?: number;
 }
 
 export interface TasksState {
@@ -13,9 +14,10 @@ export interface TasksState {
 }
 
 export interface TaskCreatePayload {
-  title: string;
-  description: string;
+  title?: string;
+  description?: string;
   user_id?: number;
+  time_spent?: number;
 }
 
 export interface TaskUpdatePayload {

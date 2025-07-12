@@ -5,31 +5,31 @@ describe("TaskForm", () => {
   test("renderiza inputs y botón", () => {
     render(<TaskForm onSubmit={jest.fn()} />);
 
-    expect(screen.getByPlaceholderText(/Título/i)).toBeInTheDocument();
-    expect(screen.getByPlaceholderText(/Descripción/i)).toBeInTheDocument();
+    expect(screen.getByPlaceholderText(/Title/i)).toBeInTheDocument();
+    expect(screen.getByPlaceholderText(/Description/i)).toBeInTheDocument();
+    // Cambiamos aquí para que coincida con el placeholder real:
     expect(
-      screen.getByPlaceholderText(/Id para modificar/i)
+      screen.getByPlaceholderText(/Task ID to update/i)
     ).toBeInTheDocument();
-    expect(
-      screen.getByRole("button", { name: /Agregar tarea/i })
-    ).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Save/i })).toBeInTheDocument();
   });
 
   test("envía datos al hacer submit", () => {
     const mockSubmit = jest.fn();
     render(<TaskForm onSubmit={mockSubmit} />);
 
-    fireEvent.change(screen.getByPlaceholderText(/Título/i), {
+    fireEvent.change(screen.getByPlaceholderText(/Title/i), {
       target: { value: "Tarea test" },
     });
-    fireEvent.change(screen.getByPlaceholderText(/Descripción/i), {
+    fireEvent.change(screen.getByPlaceholderText(/Description/i), {
       target: { value: "Descripción test" },
     });
-    fireEvent.change(screen.getByPlaceholderText(/Id para modificar/i), {
+    // Cambiamos aquí también:
+    fireEvent.change(screen.getByPlaceholderText(/Task ID to update/i), {
       target: { value: "123" },
     });
 
-    fireEvent.click(screen.getByRole("button", { name: /Agregar tarea/i }));
+    fireEvent.click(screen.getByRole("button", { name: /Save/i }));
 
     expect(mockSubmit).toHaveBeenCalledWith(
       { title: "Tarea test", description: "Descripción test" },

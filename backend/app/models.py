@@ -9,4 +9,5 @@ class Task(SQLModel, table=True):
     description: Optional[str] = None
     completed: bool = False
     created_at: datetime = Field(default_factory=datetime.utcnow)
-    user_id: Optional[int] = Field(default=None, index=True)  # 🔥 Aquí está la novedad
+    time_spent: Optional[int] = Field(default=None, ge=0)
+    user_id: Optional[int] = Field(default=None, index=True)
