@@ -9,6 +9,8 @@ def create_task(db: Session, task_data: TaskCreate) -> Task:
         title=task_data.title,
         description=task_data.description,
         user_id=task_data.user_id,
+        completed=task_data.completed,
+        time_spent=task_data.time_spent,
     )
     db.add(task)
     db.commit()

@@ -7,6 +7,7 @@ from pydantic import BaseModel
 class TaskCreate(BaseModel):
     title: str
     description: Optional[str] = None
+    completed: Optional[bool] = None
     user_id: Optional[int] = None
     time_spent: Optional[int] = 0
 

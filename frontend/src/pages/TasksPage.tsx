@@ -1,5 +1,5 @@
 // src/pages/TasksPage.tsx
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   CreateTask,
@@ -17,6 +17,7 @@ export default function TasksPage() {
   const { tasks, loading, error } = useSelector(
     (state: RootState) => state.tasks
   );
+  const [insights, setInsights] = useState("");
 
   // Al montar el componente, cargar las tareas
   useEffect(() => {
@@ -30,6 +31,12 @@ export default function TasksPage() {
     } else {
       dispatch(CreateTask(data));
     }
+  };
+
+  const fetchInsights = async () => {
+    const res = await fetch("http://localhost:8000/tasks/insights");
+    const data = await res.json();
+    setInsights(data.insights || "No se pudo generar insights");
   };
 
   // Cambiar el estado de completado
@@ -82,6 +89,13 @@ export default function TasksPage() {
           </div>
         ))}
       </div>
+      <button onClick={fetchInsights}>Generar insights IA</button>
+      {insights && (
+        <div className="insights-box">
+          <h3>📊 Insights de tus tareas</h3>
+          <p>{insights}</p>
+        </div>
+      )}
     </div>
   );
 }
