@@ -52,50 +52,52 @@ export default function TasksPage() {
   return (
     <div className="tasks-container">
       <TaskForm onSubmit={handleSubmit} />
-
       {loading && <p>Loading tasks...</p>}
-      {error && <p style={{ color: "red" }}>Error: {error}</p>}
+      {error && <p className="error-text">Error: {error}</p>}
 
-      <h1>📋 Tasks list</h1>
-      {tasks.length === 0 && !loading && <p>No tasks.</p>}
+      <div className="tasks-list">
+        <h1 className="task-list-title">📋 Tasks list</h1>
+        {tasks.length === 0 && !loading && <p>No tasks.</p>}
+        <div className="tasks-grid">
+          {tasks.map((task) => (
+            <div className="task-card" key={task.id}>
+              <strong>ID: {task.id}</strong>
+              <h3>{task.title}</h3>
+              {task.description && <p>{task.description}</p>}
+              <p>
+                State:{" "}
+                <strong style={{ color: task.completed ? "#00796b" : "gray" }}>
+                  {task.completed ? "Complete" : "To do"}
+                </strong>
+              </p>
+              <p>
+                <strong>Time spent:</strong> {task.time_spent} mins
+              </p>
 
-      <div className="tasks-grid">
-        {tasks.map((task) => (
-          <div className="task-card" key={task.id}>
-            <strong>ID: {task.id}</strong>
-
-            <h3>{task.title}</h3>
-            {task.description && <p>{task.description}</p>}
-            <p>
-              State:{" "}
-              <strong style={{ color: task.completed ? "green" : "gray" }}>
-                {task.completed ? "Complete" : "To do"}
-              </strong>
-              <strong>Time spent: {task.time_spent}</strong>
-            </p>
-
-            <div className="task-buttons">
-              <button onClick={() => toggleComplete(task)}>
-                {task.completed ? "Mark as incomplete" : "Mark as complete"}
-              </button>
-
-              <button
-                className="delete-btn"
-                onClick={() => removeTask(task.id)}
-              >
-                Delete
-              </button>
+              <div className="task-buttons">
+                <button onClick={() => toggleComplete(task)}>
+                  {task.completed ? "Mark as incomplete" : "Mark as complete"}
+                </button>
+                <button
+                  className="delete-btn"
+                  onClick={() => removeTask(task.id)}
+                >
+                  Delete
+                </button>
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
-      <button onClick={fetchInsights}>Generar insights IA</button>
-      {insights && (
-        <div className="insights-box">
-          <h3>📊 Insights de tus tareas</h3>
-          <p>{insights}</p>
+          ))}
         </div>
-      )}
+      </div>
+      <div className="insights">
+        <button onClick={fetchInsights}>📊 Generate Insights</button>
+        {insights && (
+          <div className="insights-box">
+            <h3>📊Task insights</h3>
+            <p>{insights}</p>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

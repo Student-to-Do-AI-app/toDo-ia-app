@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException, Query, Depends
-from sqlmodel import Session, select  # 👈 usa select de sqlmodel
+from sqlmodel import Session, select
 from typing import Optional, List
 from app.database import get_session
 from app import crud
@@ -9,16 +9,16 @@ from app.schemas import TaskCreate, TaskRead, TaskUpdate
 
 router = APIRouter()
 
-client = Client(host="http://127.0.0.1:11434")  # asegúrate de que Ollama corre ahí
+client = Client(host="http://127.0.0.1:11434")
 
 
 def generate_insights_from_tasks(prompt: str) -> str:
     response = client.chat(
-        model="llama3",  # usa el modelo que tengas disponible
+        model="llama3",
         messages=[
             {
                 "role": "system",
-                "content": "Eres un asistente experto en gestión de tareas y productividad. Ayuda a dar insights sobre un backlog de tareas.",
+                "content": "You are an expert assistant in task management and productivity. Help provide insights on a backlog of tasks.",
             },
             {"role": "user", "content": prompt},
         ],
@@ -42,7 +42,7 @@ def get_tasks(
 def patch_task(task_id: int, task_data: TaskUpdate, db: Session = Depends(get_session)):
     task = crud.update_task(db, task_id, task_data)
     if not task:
-        raise HTTPException(status_code=404, detail="Tarea no encontrada")
+        raise HTTPException(status_code=404, detail="Task not found")
     return task
 
 
@@ -50,23 +50,15 @@ def patch_task(task_id: int, task_data: TaskUpdate, db: Session = Depends(get_se
 def delete_task(task_id: int, db: Session = Depends(get_session)):
     success = crud.delete_task(db, task_id)
     if not success:
-        raise HTTPException(status_code=404, detail="Tarea no encontrada")
-    return {"detail": "Tarea eliminada correctamente"}
+        raise HTTPException(status_code=404, detail="Task not found")
+    return {"detail": "Task deleted"}
 
 
-@router.post("/tasks/insights")
-def get_tasks_insights(
-    prompt: str = Body(default=None), db: Session = Depends(get_session)
-):
-    if not prompt:
-        # Si no se envía prompt, construirlo con las tareas
-        tasks = db.exec(select(Task)).all()
-        prompt = "Dame insights de estas tareas:\n" + "\n".join(
-            f"- {t.title} (Completada: {t.completed}, Tiempo: {t.time_spent})"
-            for t in tasks
-        )
-    response = client.chat(
-        model="llama3",  # tu modelo de ollama
-        messages=[{"role": "user", "content": prompt}],
+@router.get("/tasks/insights")
+def get_tasks_insights(db: Session = Depends(get_session)):
+    tasks = db.exec(select(Task)).all()
+    prompt = "Generate the more importants of these tasks:\n" + "\n".join(
+        f"- {t.title} (state: {t.completed}, time: {t.time_spent})" for t in tasks
     )
-    return {"insights": response["message"]["content"]}
+    insights = generate_insights_from_tasks(prompt)
+    return {"insights": insights}

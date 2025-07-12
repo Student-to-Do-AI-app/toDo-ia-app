@@ -34,7 +34,7 @@ export default function TaskForm({ onSubmit }: TaskFormProps) {
 
   return (
     <form onSubmit={handleSubmit} className="task-form">
-      <h2>➕ Create or update a task</h2>
+      <h2>📝 Create or update a task</h2>
       <input
         type="text"
         placeholder="Title"
@@ -46,6 +46,7 @@ export default function TaskForm({ onSubmit }: TaskFormProps) {
         placeholder="Description (optional)"
         value={description}
         onChange={(e) => setDescription(e.target.value)}
+        rows={7}
       />
       <input
         type="number"
@@ -60,7 +61,7 @@ export default function TaskForm({ onSubmit }: TaskFormProps) {
         onChange={(e) => setTimeSpent(parseInt(e.target.value))}
         min={0}
       />
-      <button type="submit">Save</button>
+      <button type="submit">💾 Save Task</button>
     </form>
   );
 }
