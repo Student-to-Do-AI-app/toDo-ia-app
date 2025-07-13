@@ -31,27 +31,49 @@ Esta integración permite analizar las tareas y generar insights, como:
 
 toDo-ia-app-master/
 ├── .github/workflows/ci.yml       # CI configurado para ejecutar pruebas
+
 ├── backend/                       # API en FastAPI + SQLAlchemy
+
 │   ├── app/
+
 │   │   ├── crud.py                # Lógica CRUD
+
 │   │   ├── database.py            # Configuración de base de datos
+
 │   │   ├── main.py                # Entry point y configuración de rutas
+
 │   │   ├── models.py              # Definición de modelos ORM
+
 │   │   ├── routes.py              # Endpoints de la API
+
 │   │   └── schemas.py             # Esquemas Pydantic
+
 │   ├── tests/test_crud.py         # Pruebas unitarias de backend
+
 │   ├── masive.py                  # Script para registrar tareas masivas
+
 │   └── requirements.txt           # Dependencias de Python
+
 └── frontend/                      # Frontend en React + Redux-Saga + Vite
+
     ├── src/
+    
     │   ├── components/tasks/      # Componentes UI
+    
     │   ├── actions/               # Acciones Redux
+    
     │   ├── reducers/              # Reducers y store
+    
     │   ├── effects/               # Lógica de efectos con Redux-Saga
+    
     │   ├── pages/                 # Páginas principales
+    
     │   ├── services/              # Llamadas HTTP
+    
     │   └── models/                # Tipos y modelos
+    
     ├── package.json               # Dependencias y scripts
+    
     └── vite.config.ts             # Configuración de Vite
 
     
