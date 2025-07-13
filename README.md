@@ -125,7 +125,7 @@ Levanta servidor en: http://localhost:5173
 
 -npm run test
 
-##🛠 Tecnologías usadas
+## 🛠 Tecnologías usadas
 - React
 
 - Redux
@@ -142,11 +142,17 @@ Levanta servidor en: http://localhost:5173
 ## ✨ Funcionalidades destacadas
 
 ✅ CRUD completo de tareas
+
 ✅ Carga de tareas masivas (masive.py)
+
 ✅ Resúmenes e insights usando IA (próximamente o integrable)
+
 ✅ Componentes reutilizables (Mask para loading, entre otros)
+
 ✅ Estado global centralizado (Redux + Saga)
+
 ✅ CI/CD con GitHub Actions
+
 ✅ Separación clara entre backend y frontend
 
 ## 📂 Detalles técnicos importantes
