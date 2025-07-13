@@ -11,6 +11,7 @@ export interface TasksState {
   tasks: Task[];
   loading: boolean;
   error: string | null;
+  insights: string | null;
 }
 
 export interface TaskCreatePayload {

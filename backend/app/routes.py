@@ -55,10 +55,25 @@ def delete_task(task_id: int, db: Session = Depends(get_session)):
 
 
 @router.get("/tasks/insights")
-def get_tasks_insights(db: Session = Depends(get_session)):
+def get_tasks_insights(
+    db: Session = Depends(get_session),
+    prompt: str = Query(default=None, description="Custom prompt for the AI"),
+):
     tasks = db.exec(select(Task)).all()
-    prompt = "Generate the more importants of these tasks:\n" + "\n".join(
-        f"- {t.title} (state: {t.completed}, time: {t.time_spent})" for t in tasks
+
+    # Siempre incluimos las tareas en el prompt final
+    tasks_text = "\n".join(
+        f"- {t.title} (completed: {t.completed}, time: {t.time_spent})" for t in tasks
     )
-    insights = generate_insights_from_tasks(prompt)
+
+    if prompt:
+        # Si llega prompt personalizado, lo usamos como encabezado + tareas
+        final_prompt = f"{prompt}\n\nHere are the tasks:\n{tasks_text}"
+    else:
+        # Si no, generamos uno por defecto
+        final_prompt = (
+            "Generate the most important insights of these tasks:\n" + tasks_text
+        )
+
+    insights = generate_insights_from_tasks(final_prompt)
     return {"insights": insights}

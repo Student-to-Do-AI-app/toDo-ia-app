@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import type {
   Task,
   TaskCreatePayload,
@@ -29,4 +29,10 @@ export const updateTask = async (
 
 export const deleteTask = async (id: number): Promise<void> => {
   await axios.delete(`${API_URL}/tasks/${id}`);
+};
+
+export const aiPrompt = async (
+  prompt: string
+): Promise<AxiosResponse<{ insights: string }>> => {
+  return axios.get(`${API_URL}/tasks/insights`, { params: { prompt } });
 };

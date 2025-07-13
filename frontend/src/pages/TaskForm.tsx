@@ -56,7 +56,7 @@ export default function TaskForm({ onSubmit }: TaskFormProps) {
       />
       <input
         type="number"
-        placeholder="Time in minutes"
+        placeholder="Time in hours"
         value={timeSpent ?? ""}
         onChange={(e) => setTimeSpent(parseInt(e.target.value))}
         min={0}

@@ -1,13 +1,15 @@
 .tasks-container {
   display: flex;
-  max-height: 100%;
   padding: 2rem 2rem 0 2rem;
   font-family: "Inter", "Roboto", sans-serif;
   background-color: #f9fafa;
+  height: -webkit-fill-available;
   justify-content: space-between;
 }
 
 .tasks-grid {
+  overflow-y: auto;
+  height: 90%;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 1.5rem;

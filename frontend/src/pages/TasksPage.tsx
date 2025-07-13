@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  CreateAIPrompt,
   CreateTask,
   DeleteTask,
   FetchTasks,
@@ -11,18 +12,24 @@ import type { AppDispatch, RootState } from "../reducers/store";
 import type { Task, TaskCreatePayload } from "../models/tasks.model";
 import TaskForm from "./TaskForm";
 import "../pages/taskPage.css";
+import Mask from "../components/tasks/Mask";
 
 export default function TasksPage() {
   const dispatch = useDispatch<AppDispatch>();
-  const { tasks, loading, error } = useSelector(
+  const { tasks, loading, error, insights } = useSelector(
     (state: RootState) => state.tasks
   );
-  const [insights, setInsights] = useState("");
+  const [insightsAI, setInsightsAI] = useState<string | null>("");
+  const [aiPrompt, setAIPrompt] = useState("");
 
   // Al montar el componente, cargar las tareas
   useEffect(() => {
     dispatch(FetchTasks());
   }, [dispatch]);
+
+  useEffect(() => {
+    setInsightsAI(insights);
+  }, [insights]);
 
   // Cuando envías el formulario: decide si crear o actualizar
   const handleSubmit = (data: TaskCreatePayload, id?: number) => {
@@ -33,10 +40,8 @@ export default function TasksPage() {
     }
   };
 
-  const fetchInsights = async () => {
-    const res = await fetch("http://localhost:8000/tasks/insights");
-    const data = await res.json();
-    setInsights(data.insights || "No se pudo generar insights");
+  const fetchInsights = async (aiPrompt: string) => {
+    dispatch(CreateAIPrompt(aiPrompt));
   };
 
   // Cambiar el estado de completado
@@ -51,8 +56,8 @@ export default function TasksPage() {
 
   return (
     <div className="tasks-container">
+      <Mask active={loading} />
       <TaskForm onSubmit={handleSubmit} />
-      {loading && <p>Loading tasks...</p>}
       {error && <p className="error-text">Error: {error}</p>}
 
       <div className="tasks-list">
@@ -71,7 +76,7 @@ export default function TasksPage() {
                 </strong>
               </p>
               <p>
-                <strong>Time spent:</strong> {task.time_spent} mins
+                <strong>Time spent:</strong> {task.time_spent} hours
               </p>
 
               <div className="task-buttons">
@@ -90,11 +95,14 @@ export default function TasksPage() {
         </div>
       </div>
       <div className="insights">
-        <button onClick={fetchInsights}>📊 Generate Insights</button>
-        {insights && (
+        <textarea onChange={(e) => setAIPrompt(e.target.value)}></textarea>
+        <button onClick={() => fetchInsights(aiPrompt)}>
+          📊 Generate Insights
+        </button>
+        {insightsAI && (
           <div className="insights-box">
             <h3>📊Task insights</h3>
-            <p>{insights}</p>
+            <p>{insightsAI}</p>
           </div>
         )}
       </div>

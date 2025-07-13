@@ -10,6 +10,9 @@ import {
   UpdateTask,
   UpdateTaskSuccess,
   UpdateTaskFailure,
+  CreateAIPrompt,
+  CreateAIPromptSuccess,
+  CreateAIPromptTaskFailure,
 } from "../actions/tasks.actions";
 
 import type { TasksState } from "../models/tasks.model";
@@ -18,6 +21,7 @@ const initialState: TasksState = {
   tasks: [],
   loading: false,
   error: null,
+  insights: null,
 };
 
 export const tasksReducer = createReducer(initialState, (builder) => {
@@ -64,6 +68,20 @@ export const tasksReducer = createReducer(initialState, (builder) => {
       }
     })
     .addCase(UpdateTaskFailure, (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    })
+    // 🤖 FETCH INSIGHTS
+    .addCase(CreateAIPrompt, (state) => {
+      state.loading = true;
+      state.error = null;
+      state.insights = null; // limpiar insights anteriores
+    })
+    .addCase(CreateAIPromptSuccess, (state, action) => {
+      state.loading = false;
+      state.insights = action.payload;
+    })
+    .addCase(CreateAIPromptTaskFailure, (state, action) => {
       state.loading = false;
       state.error = action.payload;
     });

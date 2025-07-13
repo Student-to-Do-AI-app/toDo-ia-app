@@ -4,6 +4,7 @@ import {
   createTask,
   updateTask,
   deleteTask,
+  aiPrompt,
 } from "../services/tasks.services"; // ✅ importa createTask del servicio
 import {
   FetchTasks,
@@ -17,6 +18,9 @@ import {
   UpdateTask,
   DeleteTaskFailure,
   DeleteTask,
+  CreateAIPrompt,
+  CreateAIPromptTaskFailure,
+  CreateAIPromptSuccess,
 } from "../actions/tasks.actions";
 import type {
   Task,
@@ -88,6 +92,23 @@ function* handleDeleteTask(action: PayloadAction<number>) {
   }
 }
 
+function* handleAIPrompt(action: PayloadAction<string>) {
+  try {
+    const response: {
+      data: {
+        insights: string;
+      };
+    } = yield call(aiPrompt, action.payload);
+    yield put(CreateAIPromptSuccess(response.data.insights));
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      yield put(CreateAIPromptTaskFailure(error.message));
+    } else {
+      yield put(CreateAIPromptTaskFailure("Ocurrió un error desconocido"));
+    }
+  }
+}
+
 // 👀 watcher
 export default function* tasksSaga() {
   yield all([
@@ -95,5 +116,6 @@ export default function* tasksSaga() {
     takeLatest(CreateTask.type, handleCreateTask),
     takeLatest(UpdateTask.type, handleUpdateTask),
     takeLatest(DeleteTask.type, handleDeleteTask),
+    takeLatest(CreateAIPrompt.type, handleAIPrompt),
   ]);
 }

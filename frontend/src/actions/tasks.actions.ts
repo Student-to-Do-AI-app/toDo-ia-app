@@ -45,3 +45,12 @@ export const DeleteTaskSuccess = createAction<number>(
 export const DeleteTaskFailure = createAction<string>(
   "[Tasks] delete task failure"
 );
+
+// Creating AI prompt
+export const CreateAIPrompt = createAction<string>("[Tasks] AI prompt");
+export const CreateAIPromptSuccess = createAction<string>(
+  "[Tasks] AI prompt success"
+);
+export const CreateAIPromptTaskFailure = createAction<string>(
+  "[Tasks] AI prompt failure"
+);
