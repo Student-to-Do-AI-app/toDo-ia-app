@@ -63,7 +63,8 @@ def get_tasks_insights(
 
     # Siempre incluimos las tareas en el prompt final
     tasks_text = "\n".join(
-        f"- {t.title} (completed: {t.completed}, time: {t.time_spent})" for t in tasks
+        f"- {t.title} (state: {t.completed}, time in hours: {t.time_spent})"
+        for t in tasks
     )
 
     if prompt:

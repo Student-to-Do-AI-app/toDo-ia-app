@@ -79,6 +79,22 @@
   color: #222;
 }
 
+.insights input,
+.insights textarea {
+  padding: 0.6rem 0.8rem;
+  border: 1px solid #ccc;
+  margin-bottom: 24px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  transition: border-color 0.2s ease;
+}
+
+.insights input:focus,
+.insights textarea:focus {
+  outline: none;
+  border-color: #00796b;
+}
+
 .task-form input,
 .task-form textarea {
   padding: 0.6rem 0.8rem;

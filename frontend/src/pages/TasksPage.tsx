@@ -81,7 +81,7 @@ export default function TasksPage() {
 
               <div className="task-buttons">
                 <button onClick={() => toggleComplete(task)}>
-                  {task.completed ? "Mark as incomplete" : "Mark as complete"}
+                  {task.completed ? "Mark as to do" : "Mark as complete"}
                 </button>
                 <button
                   className="delete-btn"
@@ -95,7 +95,11 @@ export default function TasksPage() {
         </div>
       </div>
       <div className="insights">
-        <textarea onChange={(e) => setAIPrompt(e.target.value)}></textarea>
+        <textarea
+          rows={7}
+          placeholder="Prompt"
+          onChange={(e) => setAIPrompt(e.target.value)}
+        ></textarea>
         <button onClick={() => fetchInsights(aiPrompt)}>
           📊 Generate Insights
         </button>
