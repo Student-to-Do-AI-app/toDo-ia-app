@@ -30,6 +30,7 @@ Esta integración permite analizar las tareas y generar insights, como:
 ## 📦 Estructura del proyecto
 
 toDo-ia-app-master/
+
 ├── .github/workflows/ci.yml       # CI configurado para ejecutar pruebas
 
 ├── backend/                       # API en FastAPI + SQLAlchemy
